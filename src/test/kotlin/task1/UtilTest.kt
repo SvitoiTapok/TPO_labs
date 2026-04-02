@@ -1,10 +1,7 @@
-package task1Tests
+package task1
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvFileSource
-import task1.bernully
-import task1.combC
-import task1.factorial
 import kotlin.test.assertEquals
 
 class UtilTest {
