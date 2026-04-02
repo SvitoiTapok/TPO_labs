@@ -1,5 +1,6 @@
 package task2
 
+
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
