@@ -8,8 +8,10 @@ import kotlin.math.pow
 fun maclarenTan(x1: Double): Double {
     val accuracy = 1e-9
     if (x1.isNaN()) return Double.NaN
+    if (x1.isInfinite()) return Double.NaN
 
     val x = (x1+Math.PI/2)%Math.PI-Math.PI/2
+    println(x)
 //    if(abs( x-Math.PI/2)<0.00000001) return Double.POSITIVE_INFINITY
 //    if(abs(x+Math.PI/2)<0.00000001) return Double.NEGATIVE_INFINITY
 
@@ -25,7 +27,6 @@ fun maclarenTan(x1: Double): Double {
         res += diff
         if(abs(diff) < accuracy)
             return res
-        println(res)
         i+=1
     }
 
@@ -33,6 +34,6 @@ fun maclarenTan(x1: Double): Double {
 
 
 
-fun main(args: Array<String>) {
-    println( maclarenTan(Math.PI/3))
+fun main() {
+    println( maclarenTan(1000.0))
 }
