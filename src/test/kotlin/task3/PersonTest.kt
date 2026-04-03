@@ -9,21 +9,21 @@ import task3.essences.Person
 class PersonTest {
 
         @Test
-        fun creatingPersonWithEmptyName() {
+        fun creatingPersonWithEmptyNameTest() {
             assertThrows<IllegalArgumentException> {
                 Person("")
             }
         }
 
         @Test
-        fun defaultStateOfPerson() {
+        fun defaultStateOfPersonTest() {
             val person = Person("Форд Префект")
             assertEquals(Title.DEFAULT, person.title)
             assertFalse(person.hasTowel)
             assertEquals(0, person.relationsCount)
         }
         @Test
-        fun becomesHipel() {
+        fun becomesHipelTest() {
             val person = Person("Форд Префект")
 
             person.pack()
@@ -35,7 +35,7 @@ class PersonTest {
         }
 
         @Test
-        fun becomesFrocktFromHipel() {
+        fun becomesFroktFromHipelTest() {
             val person = Person("Форд Префект")
 
             person.pack()
@@ -47,7 +47,7 @@ class PersonTest {
         }
 
         @Test
-        fun becomesFrocktFromFrocktOrDefault() {
+        fun becomesFroktFromFrocktOrDefaultTest() {
             val person = Person("Форд Префект")
 
             assertThrows<IllegalStateException> {
@@ -60,7 +60,7 @@ class PersonTest {
         }
 
         @Test
-        fun becomesHipelFromFrocktOrHipel() {
+        fun becomesHipelFromFroktOrHipelTest() {
             val person = Person("Форд Префект")
             person.pack()
 

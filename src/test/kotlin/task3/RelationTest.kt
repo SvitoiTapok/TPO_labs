@@ -15,7 +15,7 @@ class RelationTest {
 
 
     @Test
-    fun createdState() {
+    fun createdStateTest() {
         val person = Person("No Name")
         val ford = Person("Форд Перфект")
 
@@ -25,7 +25,7 @@ class RelationTest {
     }
 
     @Test
-    fun repeatableActivation() {
+    fun repeatableActivationTest() {
         val person = Person("No Name")
         val ford = Person("Форд Перфект")
 
@@ -38,7 +38,7 @@ class RelationTest {
     }
 
     @Test
-    fun terminateRelation() {
+    fun terminateRelationTest() {
         val person = Person("No Name")
         val ford = Person("Форд")
 
@@ -50,7 +50,7 @@ class RelationTest {
     }
 
     @Test
-    fun terminateFromWrongState() {
+    fun terminateFromWrongStateTest() {
         val person = Person("No Name")
         val ford = Person("Форд")
 
@@ -67,7 +67,7 @@ class RelationTest {
     }
 
     @Test
-    fun relationCounter() {
+    fun relationCounterTest() {
         val person = Person("No Name")
         val person2 = Person("No Name 2")
         val ford = Person("Форд Перфект")
@@ -89,7 +89,7 @@ class RelationTest {
 
 
     @Test
-    fun participantCheck() {
+    fun participantCheckTest() {
         val person = Person("No Name")
         val person2 = Person("No Name 2")
         val ford = Person("Форд Перфект")
@@ -105,11 +105,19 @@ class RelationTest {
         assertFalse(relation.isFrom(ford))
         assertFalse(relation.isTo(person))
     }
+    @Test
+    fun zuchitHimselfTest() {
+        val person = Person("No Name")
+
+        assertThrows<IllegalArgumentException> {
+            ZuchitRelation(person, person, emptySet())
+        }
+    }
 
     @Test
-    fun zuchitRelationEmptyState() {
+    fun zuchitRelationEmptyStateTest() {
         val person = Person("No Name")
-        val ford = Person("Форд")
+        val ford = Person("Форд Перфект")
 
         assertThrows<IllegalArgumentException> {
             ZuchitRelation(person, ford, emptySet())
@@ -117,9 +125,9 @@ class RelationTest {
     }
 
     @Test
-    fun zuchitRelationUnemptyState() {
+    fun zuchitRelationUnemptyStateTest() {
         val person = Person("No Name")
-        val ford = Person("Форд")
+        val ford = Person("Форд Перфект")
 
         val relation = ZuchitRelation(
             person,
@@ -133,9 +141,9 @@ class RelationTest {
 
 
     @Test
-    fun zuchitRelationLifeCircle() {
+    fun zuchitRelationLifeCircleTest() {
         val person = Person("No Name")
-        val ford = Person("Форд")
+        val ford = Person("Форд Перфект")
 
         val relation = ZuchitRelation(
             person,

@@ -17,10 +17,13 @@ data class Person(
         get() = towel
 
 
-    fun isSolidPacked(): Boolean =
-        currentTitle == Title.HIPEL || currentTitle == Title.FROKT
-    fun isVerySolidPacked(): Boolean =
-        currentTitle == Title.FROKT
+    fun isSolidPacked(): Boolean {
+        return currentTitle == Title.HIPEL || currentTitle == Title.FROKT
+    }
+
+    fun isVerySolidPacked(): Boolean {
+        return currentTitle == Title.FROKT
+    }
 
     fun pack() {
         check(currentTitle == Title.DEFAULT) {

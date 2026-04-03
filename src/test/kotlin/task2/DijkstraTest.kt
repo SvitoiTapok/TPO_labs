@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test
 
 class DijkstraTest {
     @Test
-    fun emptyGraph() {
+    fun emptyGraphTest() {
         val graph = emptyList<List<Edge>>()
         assertThrows<IllegalArgumentException>(){Dijkstra().dijkstraAlgorithm(graph, 0)}
     }
     @Test
-    fun vGreaterThanGraphSize() {
+    fun vGreaterThanGraphSizeTest() {
         val graph = listOf(
             listOf(Edge(1, 2)),
             listOf(Edge(2, 3)),
@@ -72,7 +72,7 @@ class DijkstraTest {
     }
 
     @Test
-    fun graphFromSite0() {
+    fun graphFromSite0Test() {
         val graph = listOf(
             listOf(Edge(4, 5)),
             listOf(Edge(2, 5)),
@@ -111,7 +111,7 @@ class DijkstraTest {
     }
 
     @Test
-    fun graphFromSite5() {
+    fun graphFromSite5Test() {
         val graph = listOf(
             listOf(Edge(4, 5)),
             listOf(Edge(2, 5)),

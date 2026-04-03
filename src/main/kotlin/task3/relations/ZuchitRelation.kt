@@ -7,7 +7,7 @@ import task3.essences.Person
 class ZuchitRelation(
     subject: Person,
     target: Person,
-    private val meanings: Set<ZuchitMeaning>
+    val meanings: Set<ZuchitMeaning>
 ) : Relation(subject, target, RelationState.CREATED) {
 
     init {
