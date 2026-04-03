@@ -25,6 +25,12 @@ class TanTest {
     fun nanTest(){
         assertEquals(Double.NaN, maclarenTan(Double.NaN), delta)
     }
+    @Test
+    fun pid2Test(){
+        assertEquals(Double.NEGATIVE_INFINITY, maclarenTan( Math.PI/2), delta)
+        assertEquals(Double.NEGATIVE_INFINITY,  maclarenTan(Math.PI/2+0.00000001), delta)
+        assertEquals(Double.POSITIVE_INFINITY,  maclarenTan(Math.PI/2-0.00000001), delta)
+    }
     @ParameterizedTest
     @CsvFileSource(
         resources = ["/task1/tanBig.csv"],

@@ -12,8 +12,8 @@ fun maclarenTan(x1: Double): Double {
 
     val x = (x1+Math.PI/2)%Math.PI-Math.PI/2
     println(x)
-//    if(abs( x-Math.PI/2)<0.00000001) return Double.POSITIVE_INFINITY
-//    if(abs(x+Math.PI/2)<0.00000001) return Double.NEGATIVE_INFINITY
+    if(abs( x-Math.PI/2)<0.0000001) return Double.POSITIVE_INFINITY
+    if(abs(x+Math.PI/2)<0.0000001) return Double.NEGATIVE_INFINITY
 
     if (abs(x) > 0.2) {
         val res = maclarenTan(x/2)
@@ -35,5 +35,5 @@ fun maclarenTan(x1: Double): Double {
 
 
 fun main() {
-    println( maclarenTan(1000.0))
+    println( maclarenTan(Math.PI/2))
 }
