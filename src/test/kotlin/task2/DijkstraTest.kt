@@ -2,8 +2,9 @@ package task2
 
 
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+
 
 class DijkstraTest {
     @Test

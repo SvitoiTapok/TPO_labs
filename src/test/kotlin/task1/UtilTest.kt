@@ -2,7 +2,7 @@ package task1
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvFileSource
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.*
 
 class UtilTest {
     private val delta = 1e-9
