@@ -10,7 +10,7 @@ class DijkstraTest {
     @Test
     fun emptyGraphTest() {
         val graph = emptyList<List<Edge>>()
-        assertThrows<IllegalArgumentException>(){Dijkstra().dijkstraAlgorithm(graph, 0)}
+        assertThrows<IllegalArgumentException>(){Dijkstra.dijkstraAlgorithm(graph, 0)}
     }
     @Test
     fun vGreaterThanGraphSizeTest() {
@@ -21,7 +21,7 @@ class DijkstraTest {
             listOf(Edge(4, 5)),
             listOf()
         )
-        assertThrows<IllegalArgumentException>(){Dijkstra().dijkstraAlgorithm(graph, 10)}
+        assertThrows<IllegalArgumentException>(){Dijkstra.dijkstraAlgorithm(graph, 10)}
     }
     @Test
     fun linearGraphTest() {
@@ -65,10 +65,11 @@ class DijkstraTest {
             Dijkstra.Vertex(true, 14, listOf(0, 1, 2, 3, 4))
         )
 
-        val result: Dijkstra.Result = Dijkstra().dijkstraAlgorithm(graph, 0)
+        val trace: MutableList<String> = mutableListOf()
+        val result: MutableList<Dijkstra.Vertex> = Dijkstra.dijkstraAlgorithm(graph, 0, trace::add)
 
-        assertEquals(expectedTrace, result.trace)
-        assertEquals(expectedTable, result.table)
+        assertEquals(expectedTrace, trace)
+        assertEquals(expectedTable, result)
     }
 
     @Test
@@ -105,9 +106,11 @@ class DijkstraTest {
             Dijkstra.Vertex(known = false, cost = 2147483647, path = listOf()),
             Dijkstra.Vertex(known = true, cost = 9, path = listOf(0, 4, 7))
         )
-        val x: Dijkstra.Result = Dijkstra().dijkstraAlgorithm(graph, 0)
-        assertEquals(expectedTrace, x.trace)
-        assertEquals(expectedTable, x.table)
+        val trace: MutableList<String> = mutableListOf()
+        val result: MutableList<Dijkstra.Vertex> = Dijkstra.dijkstraAlgorithm(graph, 0, trace::add)
+
+        assertEquals(expectedTrace, trace)
+        assertEquals(expectedTable, result)
     }
 
     @Test
@@ -162,9 +165,10 @@ class DijkstraTest {
             Dijkstra.Vertex(known = true, cost = 5, path = listOf(5, 7))
         )
 
-        val result: Dijkstra.Result = Dijkstra().dijkstraAlgorithm(graph, 5)
+        val trace: MutableList<String> = mutableListOf()
+        val result: MutableList<Dijkstra.Vertex> = Dijkstra.dijkstraAlgorithm(graph, 5, trace::add)
 
-        assertEquals(expectedTrace, result.trace)
-        assertEquals(expectedTable, result.table)
+        assertEquals(expectedTrace, trace)
+        assertEquals(expectedTable, result)
     }
 }

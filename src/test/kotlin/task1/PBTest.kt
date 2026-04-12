@@ -6,6 +6,7 @@ import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.double
+import io.kotest.property.arbitrary.int
 import io.kotest.property.checkAll
 
 class PBTest: FreeSpec({
@@ -16,10 +17,12 @@ class PBTest: FreeSpec({
             }
         }
         "should be periodical"{
-            checkAll<Int> { a ->
-                Arb.double(-Math.PI/2+0.01, Math.PI/2-0.01).checkAll { b ->
-                    maclarenTan(b) shouldBe  (maclarenTan(b+a*Math.PI) plusOrMinus 1e-4)
-                }
+            checkAll(
+                Arb.int(-1000, 1000),
+                Arb.double(-Math.PI / 2 + 0.01, Math.PI / 2 - 0.01)
+            ) { a, b ->
+                maclarenTan(b) shouldBe
+                        (maclarenTan(b + a * Math.PI) plusOrMinus 1e-4)
             }
         }
     }
