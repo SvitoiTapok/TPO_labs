@@ -10,30 +10,28 @@ fun maclarenTan(x1: Double): Double {
     if (x1.isNaN()) return Double.NaN
     if (x1.isInfinite()) return Double.NaN
 
-    val x = (x1+Math.PI/2)%Math.PI-Math.PI/2
-    println(x)
-    if(abs( x-Math.PI/2)<0.0000001) return Double.POSITIVE_INFINITY
-    if(abs(x+Math.PI/2)<0.0000001) return Double.NEGATIVE_INFINITY
+    val x = (x1 + Math.PI / 2) % Math.PI - Math.PI / 2
+    if (abs(x - Math.PI / 2) < 0.0000001) return Double.POSITIVE_INFINITY
+    if (abs(x + Math.PI / 2) < 0.0000001) return Double.NEGATIVE_INFINITY
 
     if (abs(x) > 0.2) {
-        val res = maclarenTan(x/2)
-        return 2*res/(1- res.pow(2.0))
+        val res = maclarenTan(x / 2)
+        return 2 * res / (1 - res.pow(2.0))
     }
     var res = 0.0
-    var i=1
+    var i = 1
 
     while (true) {
-        val diff = abs(bernully(2*i)) * 2.0.pow(2*i)* (2.0.pow(2*i)-1)*x.pow(2*i-1)/ factorial(2*i)
+        val diff = abs(bernully(2 * i)) * 2.0.pow(2 * i) * (2.0.pow(2 * i) - 1) * x.pow(2 * i - 1) / factorial(2 * i)
         res += diff
-        if(abs(diff) < accuracy)
+        if (abs(diff) < accuracy)
             return res
-        i+=1
+        i += 1
     }
 
 }
 
 
-
 fun main() {
-    println( maclarenTan(Math.PI/2))
+    println(maclarenTan(Math.PI / 2))
 }
