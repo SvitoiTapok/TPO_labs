@@ -11,7 +11,7 @@ class Cos(
         var x = x0 % (2 * PI)
         if(x > PI) x -= 2 * kotlin.math.PI
         if(x < -PI) x += 2 * kotlin.math.PI
-        if(x>PI/2||x<-PI/2) return -(1-sin.invoke(x, acc).pow(2.0)).pow(0.5)
-        return (1-sin.invoke(x, acc).pow(2.0)).pow(0.5)
+        if(x>PI/2||x<-PI/2) return -(1-sin.invoke(x0, acc).pow(2.0)).pow(0.5)
+        return (1-sin.invoke(x0, acc).pow(2.0)).pow(0.5)
     }
 }
