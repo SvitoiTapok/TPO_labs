@@ -5,6 +5,9 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
+java_pid25200.hprof
+.kotlin
+.gradle-user-home
 .idea
 .idea/modules.xml
 .idea/jarRepositories.xml

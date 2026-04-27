@@ -22,6 +22,11 @@ class CSVGenerator(
         val file = outputDir.resolve(fileName).toFile()
         file.bufferedWriter().use { writer ->
             writer.appendLine("x,res_${function.functionName}")
+            if(function.functionName=="Ln"){
+                writer.appendLine("${3.0},${function.invoke(3.0,accuracy)}")
+                writer.appendLine("${5.0},${function.invoke(5.0,accuracy)}")
+                writer.appendLine("${10.0},${function.invoke(10.0,accuracy)}")
+            }
             if (steps < 2) throw IllegalArgumentException("steps must be at least 2")
             val dx = (x2 - x1) / (steps - 1)
             var x = x1
@@ -30,6 +35,7 @@ class CSVGenerator(
                 writer.appendLine("${x},${y}")
                 x += dx
             }
+
         }
         return file
     }

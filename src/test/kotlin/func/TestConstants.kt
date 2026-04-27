@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import java.nio.file.Paths
 import kotlin.math.abs
 
-const val DEFAULT_ACCURACY = 1e-1
+const val DEFAULT_ACCURACY = 1e-2
 
 object CsvTestData {
-    private const val LOOKUP_EPS = 1e-3
+    private const val LOOKUP_EPS = 1e-4
     private val cache = mutableMapOf<String, Map<Double, Double>>()
 
     fun value(functionName: String, x: String): Double {

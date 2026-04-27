@@ -6,7 +6,7 @@ import com.example.util.Drawer
 import kotlin.math.E
 
 fun main() {
-    val steps = 100000
+    val steps = 10000
     CSVGenerator(Ln(), -10.0, 10.0, steps, 1e-6).csv()
     CSVGenerator(Cos(Sin()), -10.0, 10.0, steps, 1e-6).csv()
     CSVGenerator(Csc(Sin()), -10.0, 10.0, steps, 1e-6).csv()
@@ -16,9 +16,9 @@ fun main() {
     CSVGenerator(Log5(Ln()), -10.0, 10.0, steps, 1e-6).csv()
     CSVGenerator(Log10(Ln()), -10.0, 10.0, steps, 1e-6).csv()
     CSVGenerator(Tan(Sin(), Cos(Sin())), -10.0, 10.0, steps, 1e-6).csv()
-    CSVGenerator(TrigonometricSystemFunction(Sin(), Csc(Sin()), Tan(Sin(), Cos(Sin()))), -10.0, 10.0, 1000, 1e-6).csv()
-    CSVGenerator(LogarithmicSystemFunction(Ln(), Log3(Ln()), Log5(Ln()), Log10(Ln())), -10.0, 10.0, 1000, 1e-6).csv()
-    CSVGenerator(SystemFunction(TrigonometricSystemFunction(Sin(), Csc(Sin()), Tan(Sin(), Cos(Sin()))), LogarithmicSystemFunction(Ln(), Log3(Ln()), Log5(Ln()), Log10(Ln()))), -10.0, 10.0, 1000, 1e-6).csv()
+    CSVGenerator(TrigonometricSystemFunction(Sin(), Csc(Sin()), Tan(Sin(), Cos(Sin()))), -10.0, 10.0, steps, 1e-6).csv()
+    CSVGenerator(LogarithmicSystemFunction(Ln(), Log3(Ln()), Log5(Ln()), Log10(Ln())), -10.0, 10.0, steps, 1e-6).csv()
+    CSVGenerator(SystemFunction(TrigonometricSystemFunction(Sin(), Csc(Sin()), Tan(Sin(), Cos(Sin()))), LogarithmicSystemFunction(Ln(), Log3(Ln()), Log5(Ln()), Log10(Ln()))), -10.0, 10.0, steps, 1e-6).csv()
     Drawer("Cos").plot()
     Drawer("Csc").plot()
     Drawer("Ln").plot()
