@@ -131,7 +131,7 @@ class MatFunctionIntegrationTest {
             LogarithmicSystemFunction(ln, Log3(ln), Log5(ln), Log10(ln))
         )
 
-        val actualResult = system.invoke(x, DEFAULT_ACCURACY)
+        val actualResult = system.invoke(x, 1e-6)
 
         assertCsvDoubleEquals(expectedValue, actualResult)
     }

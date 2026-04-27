@@ -26,6 +26,10 @@ class Drawer(
             .yAxisTitle("y")
             .build()
         chart.addSeries(name, xData, yData)
+        chart.styler.xAxisMin = -10.0
+        chart.styler.xAxisMax = 10.0
+        chart.styler.yAxisMin = -10.0
+        chart.styler.yAxisMax = 10.0
         val fileName = "${name}.png"
         val filePath = outputDir.resolve(fileName).toString()
         BitmapEncoder.saveBitmap(chart, filePath, BitmapEncoder.BitmapFormat.PNG)

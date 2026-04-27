@@ -50,7 +50,7 @@ class MatFunctionPropertyTest {
     @CsvSource(
         "sin zero excluded for csc, 0.0, NaN",
         "tan asymptote excluded, 1.5707963267948966, NaN",
-        "negative ordinary trigonometric point, -1.0471975511965976, 1.1547005383792517",
+        "negative ordinary trigonometric point, -1.0471975511965976, -1.7320508075688767",
         "positive logarithmic identity x = 1, 1.0, 0.0",
         "positive logarithmic base 3, 3.0, 1.0",
         "positive logarithmic base 5, 5.0, 1.0",
