@@ -6,10 +6,11 @@ import com.example.util.Drawer
 import kotlin.math.E
 
 fun main() {
-    val steps = 10000
+    val steps = 100000
     CSVGenerator(Ln(), -10.0, 10.0, steps, 1e-6).csv()
     CSVGenerator(Cos(Sin()), -10.0, 10.0, steps, 1e-6).csv()
     CSVGenerator(Csc(Sin()), -10.0, 10.0, steps, 1e-6).csv()
+    CSVGenerator(Sin(), -10.0, 10.0, steps, 1e-6).csv()
     CSVGenerator(Ln(), -10.0, 10.0, steps, 1e-6).csv()
     CSVGenerator(Log3(Ln()), -10.0, 10.0, steps, 1e-6).csv()
     CSVGenerator(Log5(Ln()), -10.0, 10.0, steps, 1e-6).csv()

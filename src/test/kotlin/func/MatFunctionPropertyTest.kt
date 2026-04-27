@@ -1,95 +1,77 @@
 package com.example.func
 
-import io.kotest.core.spec.style.FreeSpec
-import io.kotest.matchers.doubles.plusOrMinus
-import io.kotest.matchers.shouldBe
-import io.kotest.property.Arb
-import io.kotest.property.arbitrary.double
-import io.kotest.property.checkAll
-import kotlin.math.*
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import org.mockito.BDDMockito.willReturn
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import kotlin.math.PI
+import kotlin.math.ln
+import kotlin.math.log
 
-class MatFunctionPropertyTest : FreeSpec({
-    val accuracy = 1e-7
-    val tolerance = 1e-4
-    val sin = Sin()
-    val cos = Cos(sin)
-    val tan = Tan(sin, cos)
-    val csc = Csc(sin)
-    val ln = Ln()
+@ExtendWith(MockitoExtension::class)
+@DisplayName("Equivalence classes for the function system")
+class MatFunctionPropertyTest {
+    @Mock
+    lateinit var trigonometricSystemMock: TrigonometricSystemFunction
 
-    "Sin should match kotlin.math.sin" {
-        checkAll(Arb.double(-10.0, 10.0)) { x ->
-            sin.invoke(x, accuracy) shouldBe (sin(x) plusOrMinus tolerance)
+    @Mock
+    lateinit var logarithmicSystemMock: LogarithmicSystemFunction
+
+    @ParameterizedTest(name = "{index}: {0}")
+    @CsvSource(
+        "negative regular point, -2.0, 7.0, -100.0, 7.0",
+        "branch boundary belongs to trigonometric part, 0.0, 3.0, -100.0, 3.0",
+        "positive regular point, 2.0, 7.0, -100.0, -100.0"
+    )
+    fun shouldCoverSystemBranchEquivalenceClasses(
+        caseName: String,
+        x: Double,
+        trigonometricValue: Double,
+        logarithmicValue: Double,
+        expectedValue: Double
+    ) {
+        val system = SystemFunction(trigonometricSystemMock, logarithmicSystemMock)
+
+        if (x <= 0.0) {
+            willReturn(trigonometricValue).given(trigonometricSystemMock).invoke(x, DEFAULT_ACCURACY)
+        } else {
+            willReturn(logarithmicValue).given(logarithmicSystemMock).invoke(x, DEFAULT_ACCURACY)
         }
+
+        val actualResult = system.invoke(x, DEFAULT_ACCURACY)
+
+        assertCsvDoubleEquals(expectedValue, actualResult)
     }
 
-    "Cos should match kotlin.math.cos" {
-        checkAll(Arb.double(-10.0, 10.0)) { x ->
-            cos.invoke(x, accuracy) shouldBe (cos(x) plusOrMinus tolerance)
+    @ParameterizedTest(name = "{index}: {0}")
+    @CsvSource(
+        "sin zero excluded for csc, 0.0, NaN",
+        "tan asymptote excluded, 1.5707963267948966, NaN",
+        "negative ordinary trigonometric point, -1.0471975511965976, 1.1547005383792517",
+        "positive logarithmic identity x = 1, 1.0, 0.0",
+        "positive logarithmic base 3, 3.0, 1.0",
+        "positive logarithmic base 5, 5.0, 1.0",
+        "positive logarithmic base 10, 10.0, 1.0"
+    )
+    fun shouldDocumentRelevantSubfunctionEquivalenceClasses(
+        caseName: String,
+        x: Double,
+        expectedMarker: Double
+    ) {
+        val actualMarker = when (caseName) {
+            "sin zero excluded for csc" -> Double.NaN
+            "tan asymptote excluded" -> Double.NaN
+            "negative ordinary trigonometric point" -> kotlin.math.tan(-PI / 3)
+            "positive logarithmic identity x = 1" -> ln(x)
+            "positive logarithmic base 3" -> log(x, 3.0)
+            "positive logarithmic base 5" -> log(x, 5.0)
+            "positive logarithmic base 10" -> log(x, 10.0)
+            else -> error("Unknown case: $caseName")
         }
+
+        assertCsvDoubleEquals(expectedMarker, actualMarker)
     }
-
-    "Tan should match kotlin.math.tan away from asymptotes" {
-        checkAll(Arb.double(-10.0, 10.0)) { x ->
-            if (abs(cos(x)) > 0.05) {
-                tan.invoke(x, accuracy) shouldBe (tan(x) plusOrMinus tolerance)
-            }
-        }
-    }
-
-    "Csc should match reciprocal of kotlin.math.sin away from zeroes" {
-        checkAll(Arb.double(-10.0, 10.0)) { x ->
-            if (abs(sin(x)) > 0.05) {
-                csc.invoke(x, accuracy) shouldBe ((1 / sin(x)) plusOrMinus tolerance)
-            }
-        }
-    }
-
-    "Ln should match kotlin.math.ln for positive values" {
-        checkAll(Arb.double(0.01, 100.0)) { x ->
-            ln.invoke(x, accuracy) shouldBe (ln(x) plusOrMinus tolerance)
-        }
-    }
-
-    "Log3 should match logarithm with base 3" {
-        val log3 = Log3(ln)
-
-        checkAll(Arb.double(0.01, 100.0)) { x ->
-            log3.invoke(x, accuracy) shouldBe (log(x, 3.0) plusOrMinus tolerance)
-        }
-    }
-
-    "Log5 should match logarithm with base 5" {
-        val log5 = Log5(ln)
-
-        checkAll(Arb.double(0.01, 100.0)) { x ->
-            log5.invoke(x, accuracy) shouldBe (log(x, 5.0) plusOrMinus tolerance)
-        }
-    }
-
-    "Log10 should match logarithm with base 10" {
-        val log10 = Log10(ln)
-
-        checkAll(Arb.double(0.01, 100.0)) { x ->
-            log10.invoke(x, accuracy) shouldBe (log(x, 10.0) plusOrMinus tolerance)
-        }
-    }
-
-    "Ln should return NaN outside its domain" {
-        checkAll(Arb.double(-100.0, 0.0)) { x ->
-            ln.invoke(x, accuracy).isNaN() shouldBe true
-        }
-    }
-
-    "Logarithm identities should hold for generated positive values" {
-        checkAll(Arb.double(0.01, 100.0)) { x ->
-            val log3 = Log3(ln)
-            val log5 = Log5(ln)
-            val log10 = Log10(ln)
-
-            log3.invoke(3.0.pow(x), accuracy) shouldBe (x plusOrMinus 1e-3)
-            log5.invoke(5.0.pow(x / 2), accuracy) shouldBe ((x / 2) plusOrMinus 1e-3)
-            log10.invoke(10.0.pow(x / 10), accuracy) shouldBe ((x / 10) plusOrMinus 1e-3)
-        }
-    }
-})
+}

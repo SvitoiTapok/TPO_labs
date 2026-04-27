@@ -1,8 +1,6 @@
 package com.example.func
 
-import com.example.util.CSVGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvFileSource
@@ -16,14 +14,6 @@ class CosUnitTest {
     @Mock
     lateinit var sinMock: Sin
 
-    companion object {
-        @JvmStatic
-        @BeforeAll
-        fun generateCsvData() {
-            CSVGenerator(Cos(Sin()), 0.0, 1.0, 5, DEFAULT_ACCURACY).csv()
-        }
-    }
-
     @ParameterizedTest(name = "x = {0}, expected cos(x) = {1}")
     @CsvFileSource(files = ["src/test/resources/Cos_data.csv"], numLinesToSkip = 1)
     fun shouldCalculateCosUsingCsvData(
@@ -34,9 +24,9 @@ class CosUnitTest {
         val x = xStr.toDouble()
         val expectedCosValue = expectedCosStr.toDouble()
         val accuracy = DEFAULT_ACCURACY
-        val expectedSinArgument = PI / 2 - x
+        val sinValue = CsvTestData.value("Sin", x)
 
-        willReturn(expectedCosValue).given(sinMock).invoke(expectedSinArgument, accuracy)
+        willReturn(sinValue).given(sinMock).invoke(x, accuracy)
 
         val actualResult = cos.invoke(x, accuracy)
 

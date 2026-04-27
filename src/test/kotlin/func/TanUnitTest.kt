@@ -1,9 +1,7 @@
 package com.example.func
 
-import com.example.util.CSVGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvFileSource
@@ -20,15 +18,6 @@ class TanUnitTest {
     @Mock
     lateinit var cosMock: Cos
 
-    companion object {
-        @JvmStatic
-        @BeforeAll
-        fun generateCsvData() {
-            val sin = Sin()
-            CSVGenerator(Tan(sin, Cos(sin)), 0.0, 1.0, 5, DEFAULT_ACCURACY).csv()
-        }
-    }
-
     @ParameterizedTest(name = "x = {0}, expected tan(x) = {1}")
     @CsvFileSource(files = ["src/test/resources/Tan_data.csv"], numLinesToSkip = 1)
     fun shouldCalculateTanUsingCsvData(
@@ -38,8 +27,8 @@ class TanUnitTest {
         val tan = Tan(sinMock, cosMock)
         val x = xStr.toDouble()
         val expectedTanValue = expectedTanStr.toDouble()
-        val sinValue = expectedTanValue
-        val cosValue = 1.0
+        val sinValue = CsvTestData.value("Sin", x)
+        val cosValue = CsvTestData.value("Cos", xStr)
         val accuracy = DEFAULT_ACCURACY
 
         willReturn(cosValue).given(cosMock).invoke(x, accuracy)
