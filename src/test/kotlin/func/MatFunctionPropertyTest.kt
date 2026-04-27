@@ -71,7 +71,6 @@ class MatFunctionPropertyTest {
             "positive logarithmic base 10" -> log(x, 10.0)
             else -> error("Unknown case: $caseName")
         }
-
         assertCsvDoubleEquals(expectedMarker, actualMarker)
     }
 }

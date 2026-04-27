@@ -136,15 +136,4 @@ class MatFunctionIntegrationTest {
         assertCsvDoubleEquals(expectedValue, actualResult)
     }
 
-    @Test
-    fun shouldDocumentSelectedIntegrationStrategy() {
-        val strategy = listOf(
-            "1. SystemFunction is tested against top-level stubs to verify the x <= 0 branch split.",
-            "2. TrigonometricSystemFunction is connected while Sin, Csc and Tan remain stubs.",
-            "3. LogarithmicSystemFunction is connected while Ln, Log3, Log5 and Log10 remain stubs.",
-            "4. Full SystemFunction is tested with real modules against the reference CSV table."
-        )
-
-        assertCsvDoubleEquals(4.0, strategy.size.toDouble())
-    }
 }
