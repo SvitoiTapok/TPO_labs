@@ -9,6 +9,7 @@ import java.time.Duration
 class RegistrationPage(
     private val webDriver: WebDriver,
 ) : Page(webDriver) {
+    private val wait = WebDriverWait(webDriver, Duration.ofSeconds(3))
     fun open() {
         webDriver.get("https://anison.fm/")
         webDriver.findElement(By.xpath("//button[@class='header-login__btn']")).click()
@@ -37,7 +38,7 @@ class RegistrationPage(
     }
 
     fun isNicknameAvailable(): Boolean {
-        val wait = WebDriverWait(webDriver, Duration.ofSeconds(1))
+
         val form = webDriver.findElement(By.xpath("//form[@class='login-form']"))
         val valid = form.findElement(By.xpath("//p[@id='suggest_valid']"))
 //        val invalid = form.findElement(By.xpath("//p[@id='suggest_invalid']"))
