@@ -20,6 +20,7 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    systemProperty("browser", System.getProperty("browser") ?: "all")
 }
 kotlin {
     jvmToolchain(17)

@@ -10,7 +10,7 @@ import java.time.Duration
 class MainPage(
     private val webDriver: WebDriver,
 ) : Page(webDriver) {
-    val wait = WebDriverWait(webDriver, Duration.ofSeconds(3))
+    val wait = WebDriverWait(webDriver, Duration.ofSeconds(5))
     fun open() {
         webDriver.get("https://anison.fm/")
     }

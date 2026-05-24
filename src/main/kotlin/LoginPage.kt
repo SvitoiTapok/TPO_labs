@@ -17,7 +17,7 @@ class LoginPage(
     private val loginInput = By.xpath(".//input[contains(@class,'login-nick__input')]")
     private val passwordInput = By.xpath(".//input[contains(@class,'form-password-input')]")
     private val submitButton = By.xpath(".//button[contains(@class,'modal-btn')]")
-    private val loginError = By.xpath(".//[contains(@id,'login-error') or contains(@class,'login-error')]")
+    private val loginError = By.xpath(".//div[@id='login-error']")
 
     fun open():LoginPage {
         webDriver.get("https://anison.fm/")
@@ -27,10 +27,10 @@ class LoginPage(
     }
 
     fun login(login: String, password: String): MainPage {
-        val form = webDriver.findElement(By.xpath("//form[@class='login-form']"))
-        val loginField = form.findElement(By.xpath(".//input[@class='login-nick__input form-control']"))
-        val passwordField = form.findElement(By.xpath(".//input[@class='form-control form-password-input']"))
-        val sendButton = form.findElement(By.xpath(".//button[@class='modal-btn']"))
+        val form = webDriver.findElement(loginForm)
+        val loginField = form.findElement(loginInput)
+        val passwordField = form.findElement(passwordInput)
+        val sendButton = form.findElement(submitButton)
 
         loginField.sendKeys(login)
         passwordField.sendKeys(password)
@@ -38,8 +38,8 @@ class LoginPage(
         return MainPage(webDriver)
     }
     fun getError(): String {
-        val form = webDriver.findElement(By.xpath("//form[@class='login-form']"))
-        val errorDiv = form.findElement(By.xpath(".//div[@id='login-error']"))
+        val form = webDriver.findElement(loginForm)
+        val errorDiv = form.findElement(loginError)
         try {
             wait.until {
                 !errorDiv.getAttribute("class").contains("d-none")
