@@ -1,12 +1,13 @@
-import com.example.LoginPage
+import com.example.MainPage
 import com.example.WebDriverFactory
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.openqa.selenium.WebDriver
 import kotlin.test.assertTrue
 
-class FavoriteTest {
+class ListeningTest {
 
     private lateinit var driver: WebDriver
 
@@ -30,24 +31,23 @@ class FavoriteTest {
         driver.quit()
     }
 
-    @ParameterizedTest(name = "song is added to favorites in {0}")
+    @ParameterizedTest(name = "song starts and end playing in {0}")
     @MethodSource("browsers")
-    fun testSongAddedToFavorites(browser: WebDriverFactory.Browser) {
+    fun testSongStartsPlaying(browser: WebDriverFactory.Browser) {
         driver = WebDriverFactory.create(browser)
 
-        val mainPage = LoginPage(driver)
-            .open()
-            .login("svitoi_tapok1", "000Tt111")
+        val mainPage = MainPage(driver).open()
 
-        val songTitle = mainPage.getCurrentSongTitle()
+        mainPage.waitUntilSongStopped()
+        assertTrue(mainPage.isSongStopped())
 
-        if(!mainPage.isFavoriteHighlighted()) mainPage.addCurrentSongToFavorites()
+        mainPage.pressPlay()
+        mainPage.waitUntilSongPlaying()
+        assertTrue(mainPage.isSongPlaying())
 
-
-        assertTrue(mainPage.isFavoriteHighlighted())
-
-        mainPage.openFavorites()
-
-        assertTrue(mainPage.isSongInFavorites(songTitle))
+        mainPage.pressPlay()
+        mainPage.waitUntilSongStopped()
+        assertTrue(mainPage.isSongStopped())
     }
+
 }

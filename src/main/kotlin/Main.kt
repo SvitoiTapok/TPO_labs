@@ -1,12 +1,27 @@
 package com.example
 
+import java.io.File
+
 fun main() {
     val driver = WebDriverFactory.create(WebDriverFactory.Browser.CHROME)
-    val main = MainPage(driver)
-    main.open()
-    main.pressPlay()
-    println(main.isSongPlaying())
-    driver.close()
+
+    driver.get("https://anison.fm/")
+
+    val html = driver.pageSource
+
+    File("page_dom.html").writeText(html)
+
+    driver.quit()
+//    val main = MainPage(driver)
+//    val login = LoginPage(driver)
+//    main.open()
+//    main.pressPlay()
+//    //main.addCurrentSongToFavorites()
+//    login.open()
+//    login.login("svitoi_tapok1", "000Tt111").addCurrentSongToFavorites()
+//    println( main.isFavoriteHighlighted())
+//    println( main.getCurrentSongTitle())
+    //driver.close()
 //    val registrationPage = RegistrationPage(driver)
 //    registrationPage.open()
 //    registrationPage.register("svitoi_tapok", "CXw4md", "d")

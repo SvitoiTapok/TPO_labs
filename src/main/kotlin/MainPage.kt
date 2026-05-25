@@ -1,8 +1,6 @@
 package com.example
 
-import org.openqa.selenium.By
-import org.openqa.selenium.StaleElementReferenceException
-import org.openqa.selenium.WebDriver
+import org.openqa.selenium.*
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.time.Duration
@@ -13,7 +11,9 @@ class MainPage(
 
     private val wait = WebDriverWait(webDriver, Duration.ofSeconds(10))
 
-    private val playButton = By.xpath("(//button[contains(@class, 'song-play')])[1]")
+    private val playerWrapper = By.xpath("(//div[contains(@class, 'player-wrapper')])")
+
+    private val playButton = By.xpath("(.//button[contains(@class, 'song-play')])")
 
     private val startIcon = By.xpath(
         ".//*[local-name()='svg' and contains(@class, 'song-play__start')]"
@@ -23,6 +23,13 @@ class MainPage(
         ".//*[local-name()='svg' and contains(@class, 'song-play__stop')]"
     )
 
+    private val favoriteButton = By.xpath("//button[contains(@id, 'ski')]")
+
+    private val favoritesLink = By.xpath("(//a[contains(@href, '/favorites')])")
+    private val songTitle = By.xpath("(//a[contains(@class, 'song-box__title anime_link')])")
+    private val modalBody = By.xpath("//div[contains(@class, 'modal-body')]")
+
+
     fun open(): MainPage {
         webDriver.get("https://anison.fm/")
         wait.until(ExpectedConditions.elementToBeClickable(playButton))
@@ -31,7 +38,17 @@ class MainPage(
     }
 
     fun pressPlay(): MainPage {
-        wait.until(ExpectedConditions.elementToBeClickable(playButton)).click()
+        waitUntilNoVisibleModal()
+
+        wait
+            .ignoring(StaleElementReferenceException::class.java)
+            .ignoring(ElementClickInterceptedException::class.java)
+            .until {
+                val button = webDriver.findElement(playerWrapper).findElement(playButton)
+                button.click()
+                true
+            }
+
         return this
     }
 
@@ -72,6 +89,13 @@ class MainPage(
 
         return this
     }
+    private fun waitUntilNoVisibleModal() {
+        wait
+            .ignoring(StaleElementReferenceException::class.java)
+            .until {
+                webDriver.findElements(modalBody).none { it.isDisplayed }
+            }
+    }
 
     fun waitUntilSongStopped(): MainPage {
         wait
@@ -81,6 +105,77 @@ class MainPage(
             }
 
         return this
+    }
+
+    fun getCurrentSongTitle(): String {
+        return wait
+            .ignoring(StaleElementReferenceException::class.java)
+            .until {
+                webDriver.findElement(songTitle).text
+            }
+    }
+
+    fun addCurrentSongToFavorites(): MainPage {
+        waitUntilNoVisibleModal()
+        wait
+            .ignoring(StaleElementReferenceException::class.java)
+            .until {
+                val button = webDriver.findElements(favoriteButton)
+                    .firstOrNull { it.isDisplayed && it.isEnabled }
+                    ?: return@until false
+                button.click()
+                true
+            }
+
+        return this
+    }
+
+    fun isFavoriteHighlighted(): Boolean {
+        return try {
+            wait
+                .ignoring(StaleElementReferenceException::class.java)
+                .until {
+                    val button = webDriver.findElement(favoriteButton)
+
+                    val emptyClass = button.findElement(
+                        By.xpath(".//*[local-name()='svg' and contains(@class, 'song-like__empty')]")
+                    )
+                        .getDomAttribute("class")
+                        .orEmpty()
+
+                    val fillClass = button.findElement(
+                        By.xpath(".//*[local-name()='svg' and contains(@class, 'song-like__fill')]")
+                    )
+                        .getDomAttribute("class")
+                        .orEmpty()
+                    val highlighted = emptyClass.contains("hide") && !fillClass.contains("hide")
+                    if (highlighted) true else null
+                }
+            true
+        } catch (e: TimeoutException) {
+            false
+        }
+    }
+
+
+    fun openFavorites(): MainPage {
+        wait.until(ExpectedConditions.elementToBeClickable(favoritesLink)).click()
+        wait.until(ExpectedConditions.urlContains("/favorites"))
+        return this
+    }
+
+    fun isSongInFavorites(songTitle: String): Boolean {
+        try {
+            wait
+                .ignoring(StaleElementReferenceException::class.java)
+                .until {
+                    webDriver.findElements(By.xpath("//p[contains(@class, 'tracks-heading__title')]"))
+                        .find { el -> el.text == songTitle }
+                }
+            return true
+        } catch (ex: TimeoutException) {
+            return false
+        }
     }
 
     fun getNickname(): String? {
