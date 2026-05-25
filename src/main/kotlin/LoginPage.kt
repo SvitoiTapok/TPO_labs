@@ -1,6 +1,7 @@
 package com.example
 
 import org.openqa.selenium.By
+import org.openqa.selenium.StaleElementReferenceException
 import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
@@ -35,7 +36,32 @@ class LoginPage(
         loginField.sendKeys(login)
         passwordField.sendKeys(password)
         sendButton.click()
+
         return MainPage(webDriver)
+    }
+    fun safeLogin(login: String, password: String): MainPage {
+        val form = webDriver.findElement(loginForm)
+        val loginField = form.findElement(loginInput)
+        val passwordField = form.findElement(passwordInput)
+        val sendButton = form.findElement(submitButton)
+
+        loginField.sendKeys(login)
+        passwordField.sendKeys(password)
+        sendButton.click()
+        waitUntilLoggedIn(login)
+        return MainPage(webDriver)
+    }
+    private fun waitUntilLoggedIn(username: String) {
+        wait
+            .ignoring(StaleElementReferenceException::class.java)
+            .until {
+                val nickText = webDriver.findElements(By.xpath("//div[contains(@class, 'header-login')]//p[contains(@class, 'profile-block__title')]"))
+                    .firstOrNull { it.isDisplayed }
+                    ?.text
+                    ?.trim()
+
+                nickText == username
+            }
     }
     fun getError(): String {
         val form = webDriver.findElement(loginForm)

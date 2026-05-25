@@ -9,9 +9,9 @@ enum class SearchType(
     val itemClass: String,
     val title: String,
 ) {
-    ANIME("anime", "\u0410\u043d\u0438\u043c\u0435"),
-    TRACK("track", "\u0422\u0440\u0435\u043a"),
-    ARTIST("artist", "\u0410\u0440\u0442\u0438\u0441\u0442");
+    ANIME("anime", "Аниме"),
+    TRACK("track", "Трек"),
+    ARTIST("artist", "Артист");
 }
 
 class MainPage(

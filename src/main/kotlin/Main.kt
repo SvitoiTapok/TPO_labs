@@ -4,18 +4,27 @@ import java.io.File
 
 fun main() {
     val driver = WebDriverFactory.create(WebDriverFactory.Browser.CHROME)
-
-    val mainPage = MainPage(driver)
-        .open()
-        .search("Chaos Head", SearchType.ANIME)
-    println(mainPage.isSearchResultFound("Chaos Head"))
+//
+//    driver.get("https://anison.fm/chat/")
+//
+//    val html = driver.pageSource
+//
+//    File("page_dom2.html").writeText(html)
+//
+//    driver.quit()
+    val chatPage = ChatPage(driver)
+    val loginPage = LoginPage(driver)
+    loginPage.open()
+    loginPage.login("svitoi_tapok1", "000Tt111")
+    chatPage.open()
+    chatPage.typeMessage("dsafa")
 //    val main = MainPage(driver)
 //    val login = LoginPage(driver)
 //    main.open()
 //    main.pressPlay()
 //    //main.addCurrentSongToFavorites()
 //    login.open()
-//    login.login("svitoi_tapok1", "000Tt111").addCurrentSongToFavorites()
+
 //    println( main.isFavoriteHighlighted())
 //    println( main.getCurrentSongTitle())
     //driver.close()
