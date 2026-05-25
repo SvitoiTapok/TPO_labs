@@ -5,6 +5,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.time.Duration
 
+enum class SearchType(
+    val itemClass: String,
+    val title: String,
+) {
+    ANIME("anime", "\u0410\u043d\u0438\u043c\u0435"),
+    TRACK("track", "\u0422\u0440\u0435\u043a"),
+    ARTIST("artist", "\u0410\u0440\u0442\u0438\u0441\u0442");
+}
+
 class MainPage(
     private val webDriver: WebDriver,
 ) : Page(webDriver) {
@@ -28,6 +37,15 @@ class MainPage(
     private val favoritesLink = By.xpath("(//a[contains(@href, '/favorites')])")
     private val songTitle = By.xpath("(//a[contains(@class, 'song-box__title anime_link')])")
     private val modalBody = By.xpath("//div[contains(@class, 'modal-body')]")
+    private val searchInput = By.xpath(
+        "(//div[contains(@class, 'search-wrapper') and not(contains(@class, 'search-wrapper--mobile'))]" +
+            "//input[@id='search' and contains(@class, 'search-box__input')])[1]"
+    )
+    private val searchDropdownButton = By.xpath(
+        "(//div[contains(@class, 'search-wrapper') and not(contains(@class, 'search-wrapper--mobile'))]" +
+            "//button[contains(@class, 'search-dropdown__title')])[1]"
+    )
+    private val searchResultTitleXpath = By.xpath("(//div[contains(@class, 'search-wrapper') and not(contains(@class, 'search-wrapper--mobile'))]" + "//p[contains(@class, 'validation-item__title')])")
 
 
     fun open(): MainPage {
@@ -175,6 +193,57 @@ class MainPage(
             return true
         } catch (ex: TimeoutException) {
             return false
+        }
+    }
+
+    fun search(query: String, type: SearchType = SearchType.ANIME): MainPage {
+        selectSearchType(type)
+
+        val input = wait.until(ExpectedConditions.visibilityOfElementLocated(searchInput))
+        input.clear()
+        input.sendKeys(query)
+
+        return this
+    }
+
+    fun selectSearchType(type: SearchType): MainPage {
+        waitUntilNoVisibleModal()
+        wait.until(ExpectedConditions.elementToBeClickable(searchDropdownButton)).click()
+        wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath(
+                    "(//div[contains(@class, 'search-wrapper') and not(contains(@class, 'search-wrapper--mobile'))]" +
+                        "//li[contains(@class, 'search-item') and contains(@class, '${type.itemClass}')])[1]"
+                )
+            )
+        ).click()
+
+        wait.until {
+            getSelectedSearchType() == type.title
+        }
+
+        return this
+    }
+
+
+    fun getSelectedSearchType(): String {
+        return wait
+            .until(ExpectedConditions.visibilityOfElementLocated(searchDropdownButton))
+            .text
+            .trim()
+    }
+
+    fun isSearchResultFound(expectedText: String): Boolean {
+
+        return try {
+            wait
+                .ignoring(StaleElementReferenceException::class.java)
+                .until {
+                    webDriver.findElements(searchResultTitleXpath)
+                        .any { it.text.contains(expectedText, ignoreCase = true) }
+                }
+        } catch (e: TimeoutException) {
+            false
         }
     }
 

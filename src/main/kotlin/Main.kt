@@ -5,13 +5,10 @@ import java.io.File
 fun main() {
     val driver = WebDriverFactory.create(WebDriverFactory.Browser.CHROME)
 
-    driver.get("https://anison.fm/")
-
-    val html = driver.pageSource
-
-    File("page_dom.html").writeText(html)
-
-    driver.quit()
+    val mainPage = MainPage(driver)
+        .open()
+        .search("Chaos Head", SearchType.ANIME)
+    println(mainPage.isSearchResultFound("Chaos Head"))
 //    val main = MainPage(driver)
 //    val login = LoginPage(driver)
 //    main.open()
