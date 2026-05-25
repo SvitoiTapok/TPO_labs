@@ -15,6 +15,9 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+.gradle-user-home
+.idea
+*.hprof
 
 ### Eclipse ###
 .apt_generated

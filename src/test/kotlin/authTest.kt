@@ -1,0 +1,95 @@
+import com.example.LoginPage
+import com.example.RegistrationPage
+import com.example.WebDriverFactory
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
+import org.openqa.selenium.WebDriver
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+
+class AuthTest {
+
+    private lateinit var driver: WebDriver
+
+    companion object {
+        private const val WRONG_AUTH_ERROR = "Неверный логин или пароль"
+
+        @JvmStatic
+        fun browsers(): List<WebDriverFactory.Browser> {
+            return when (System.getProperty("browser")?.lowercase()) {
+                "chrome" -> listOf(WebDriverFactory.Browser.CHROME)
+                "firefox" -> listOf(WebDriverFactory.Browser.FIREFOX)
+                "all", null -> listOf(
+                    WebDriverFactory.Browser.CHROME,
+                    WebDriverFactory.Browser.FIREFOX
+                )
+                else -> error("Use -Dbrowser=chrome, -Dbrowser=firefox or -Dbrowser=all")
+            }
+        }
+    }
+
+    @AfterEach
+    fun tearDown() {
+        driver.quit()
+    }
+
+    @ParameterizedTest(name = "successful auth in {0}")
+    @MethodSource("browsers")
+    fun testRightAuth(browser: WebDriverFactory.Browser) {
+        driver = WebDriverFactory.create(browser)
+
+        val mainPage = LoginPage(driver)
+            .open()
+            .login("svitoi_tapok1", "000Tt111")
+
+        assertEquals("svitoi_tapok1", mainPage.getNickname())
+    }
+
+    @ParameterizedTest(name = "wrong auth in {0}")
+    @MethodSource("browsers")
+    fun testErrorAuth(browser: WebDriverFactory.Browser) {
+        driver = WebDriverFactory.create(browser)
+
+        val loginPage = LoginPage(driver).open()
+        loginPage.login("dsafefefe", "000Tt111")
+
+        assertEquals(WRONG_AUTH_ERROR, loginPage.getError())
+    }
+
+    @ParameterizedTest(name = "wrong password auth in {0}")
+    @MethodSource("browsers")
+    fun testWrongPasswordAuth(browser: WebDriverFactory.Browser) {
+        driver = WebDriverFactory.create(browser)
+
+        val loginPage = LoginPage(driver).open()
+        loginPage.login("svitoi_tapok1", "wrongPassword123")
+
+        assertEquals(WRONG_AUTH_ERROR, loginPage.getError())
+    }
+
+    @ParameterizedTest(name = "available nickname registration in {0}")
+    @MethodSource("browsers")
+    fun testAvailableNicknameRegistration(browser: WebDriverFactory.Browser) {
+        driver = WebDriverFactory.create(browser)
+        val registrationPage = RegistrationPage(driver).open()
+        registrationPage.register(
+            login = "test_df3ewef",
+            password = "000Tt111",
+            email = "test@example.com"
+        )
+
+        assertTrue(registrationPage.isNicknameAvailable())
+    }
+
+    @ParameterizedTest(name = "unavailable nickname registration in {0}")
+    @MethodSource("browsers")
+    fun testUnavailableNicknameRegistration(browser: WebDriverFactory.Browser) {
+        driver = WebDriverFactory.create(browser)
+
+        val registrationPage = RegistrationPage(driver).open()
+        registrationPage.putRegistrationLogin("svitoi_tapok1")
+        assertFalse(registrationPage.isNicknameAvailable())
+    }
+}
